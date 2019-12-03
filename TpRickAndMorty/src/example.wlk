@@ -1,6 +1,6 @@
 class Rick {
 
-	var property nivelDemencia
+	var property nivelDemencia = 0
 	const familia = []
 	var acompaniante
 
@@ -8,48 +8,55 @@ class Rick {
 		if ((!familia.isEmpty())) {
 			acompaniante = familia.anyOne()
 		}
+		return acompaniante
 	}
 
+	method puedeIrAventura(){
+		return (acompaniante.puedeIrAventura()  && nivelDemencia + acompaniante.variacionDemencia() <= 100)
+	}
+	
 	method aumentarDemencia(cantidad) {
 		nivelDemencia += cantidad
 	}
 
 	method seVaDeAventura() {
-		if (acompaniante.puedeIrAventura()) {
+		if (self.puedeIrAventura()) {
 			acompaniante.seVaDeAventura(self)
-			if (self.nivelDemencia() < 100) {
-				return true
-			}
 		}
+		else{
 		nivelDemencia /= 2
-		return false
+		}
 	}
 
 }
 
 //Para probar los casos
-const unRicky = new Rick(nivelDemencia = 10, familia = [ unMorty, unBeth, unSummer, unJerry ], acompaniante = unMorty)const unMorty = new Morty(saludMental = 20)const unBeth = new Beth(afectoPadre = 30)const unSummer = new Summer(afectoPadre = 30)const unJerry = new Jerry()class Morty {
+const unRicky = new Rick(nivelDemencia = 10, familia = [ unMorty, unBeth, unSummer, unJerry ], acompaniante = unMorty)
+const unMorty = new Morty(saludMental = 20)const unBeth = new Beth(afectoPadre = 30)const unSummer = new Summer(afectoPadre = 30)
+const unJerry = new Jerry()
 
+class Morty {
+	const property variacionDemencia = 50
 	var saludMental
 
 	method puedeIrAventura() = true
 
 	method seVaDeAventura(ricky) {
 		saludMental -= 30
-		ricky.aumentarDemencia(50)
+		ricky.aumentarDemencia(variacionDemencia)
 	}
 
 }
 
 class Beth {
-
+	const property variacionDemencia = -20
 	var afectoPadre
 
 	method puedeIrAventura() = true
 
 	method seVaDeAventura(ricky) {
 		afectoPadre -= 10
-		ricky.aumentarDemencia(-20)
+		ricky.aumentarDemencia(variacionDemencia)
 	}
 
 }
@@ -65,8 +72,9 @@ class Summer inherits Beth {
 }
 
 class Jerry {
-
+	const property variacionDemencia = 0
 	method puedeIrAventura() = false
+	method seVaDeAventura(_){}
 
 }
 
